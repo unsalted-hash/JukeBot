@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <title>JukeBot</title>
+    <link href="./styles.css" rel="stylesheet" type="text/css">
+    <script src="./scripts/popup/popup.js" type="text/javascript"></script>
+    <script src="./scripts/popup/Fader.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="header">
+        <h1>JukeBot</h1>
+    </div>
+
+    <table id="song-display">
+      <tr>
+        <td>
+            <div id="downvote" class="thumb downvote">
+                <img src="./icons/thumbs_down24.png" draggable="false" />
+            </div>
+        </td>
+        <td>
+          <div class="no-select">
+            <div id="song-title">Africa</div>
+            <div id="artists">Toto</div>
+            <div id="played-by"><i>Played by <span id="dj">Hawk</span></i></div>
+          </div>
+          <div id="progress-bar" class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+        </td>
+        <td>
+          <div id="upvote" class="thumb upvote">
+              <img src="./icons/thumbs_up24.png" draggable="false" />
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="script-list">
+      <tr>
+        <td>
+          <span class="script-title started">JukeBot</span>
+        </td>
+        <td>
+          Main script for JukeBot. Allows you to do things like view the song that is currently playing or give a quick thumbs-up.
+        </td>
+        <td>
+          <button disabled>Stop</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span id="auto-doot-title" class="script-title">AutoDope</span>
+        </td>
+        <td>
+          Spread the love! Automatically give a thumbs-up for every song.
+        </td>
+        <td>
+          <button id="auto-doot-button">Start</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span id="notifier-title" class="script-title">Notifier</span>
+        </td>
+        <td>
+          Get a notification whenever your name is mentioned in the JQBX chat.
+        </td>
+        <td>
+          <button id="notifier-button">Start</button>
+        </td>
+      </tr>
+    </table>
+
+    <div id="created-by">
+      <i>Created by Hawk</i>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,132 @@
+body {
+    min-width: 480px;
+    padding: 3px;
+}
+
+h1 {
+    margin: 4px 0 6px 2px;
+    color: #337ab7;
+}
+
+button {
+    background-color: #fbfbfb;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+    padding: 6px 12px;
+    text-align: center;
+    user-select: none;
+}
+
+button:not(:disabled):hover {
+    background-color: #f4f4f4;
+}
+
+button:disabled {
+    cursor: default;
+    opacity: .5;
+}
+
+.header {
+    text-align: center;
+}
+
+#song-display {
+    margin: 14px 5%;
+    opacity: 0;
+    text-align: center;
+    width: 90%;
+}
+
+#song-display td:first-child, #song-display td:last-child {
+    width: 1px;
+}
+
+#played-by {
+    font-size: 10px;
+}
+
+.progress-bar {
+    border-radius: 2px;
+    margin: 4px 5% 0;
+    border: 1px solid #888;
+    width: 90%;
+}
+
+.progress-bar .progress-fill {
+    background-color: #337ab7;
+    height: 2px;
+    width: 50%;
+}
+
+.thumb {
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    cursor: pointer;
+    height: 32px;
+    margin: 0;
+    padding: 8px 4px 0;
+    user-select: none;
+    width: 32px;
+}
+
+.thumb.active {
+    border-color: #888;
+    cursor: default;
+}
+
+.thumb.inactive {
+    cursor: default;
+}
+
+.thumb.upvote.active {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.thumb.upvote:not(.active):not(.inactive):hover {
+    background-color: #dff0d8;
+}
+
+.thumb.downvote.active {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.thumb.downvote:not(.active):not(.inactive):hover {
+    background-color: #fbd7d7;
+}
+
+.script-title.started {
+    color: #3c763d;
+    font-weight: bold;
+}
+
+table.script-list {
+    border-collapse: collapse;
+    margin-top: 8px;
+    width: 100%;
+}
+
+table.script-list tr {
+    border-bottom: 1px solid #eee;
+}
+
+table.script-list tr:last-child {
+    border-bottom: none;
+}
+
+table.script-list td {
+    padding: 6px;
+}
+
+table.script-list td:last-child {
+    width: 1px;
+}
+
+#created-by {
+    font-size: 9px;
+    margin-top: 8px;
+    text-align: right;
+}
