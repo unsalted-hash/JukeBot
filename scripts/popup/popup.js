@@ -1,89 +1,46 @@
 var pageElements;
 var progressInterval;
-var fader;
+var animator;
 
 var autoDootEnabled;
 var notifierEnabled;
 
 window.onload = function () {
-    fader = new Fader();
+    animator = new Animator();
     pageElements = findElements();
     initHandlers();
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
-        initAutoDoot(response.autoDootEnabled);
+        autoDootenabled = response.autoDootEnabled;
+        pageElements.autoDootCheckbox.checked = autoDootenabled;
+        animator.toggleClass(pageElements.autoDootTitle, 'started', autoDootEnabled);
     });
 
     chrome.storage.sync.get('notifierEnabled', function (response) {
-        initNotifier(response.notifierEnabled);
+        notifierEnabled = response.notifierEnabled;
+        pageElements.notifierCheckbox.checked = notifierEnabled;
+        animator.toggleClass(pageElements.notifierTitle, 'started', notifierEnabled);
     });
+
+    chrome.storage.sync.get('notifierShowAll', function (response) {
+        pageElements.notifierShowAllCheckbox.checked = response.notifierShowAll;
+    });
+
+    chrome.storage.sync.get('notifierShowAlerts', function (response) {
+        pageElements.notifierShowAlertsCheckbox.checked = response.notifierShowAlerts;
+    });
+
+    optionsVisible = chrome.extension.getBackgroundPage().notifierOptionsVisible;
+    if (chrome.extension.getBackgroundPage().notifierOptionsVisible) {
+        pageElements.optionsContainer.style.display = 'block';
+        pageElements.optionsContainer.style.height = pageElements.optionsContainer.style.maxHeight;
+        pageElements.notifierOptions.style.opacity = 1;
+        pageElements.notifierOptions.style.visibility = 'visible';
+    }
+
 
     sendMessage('popup_loaded');
 };
-
-function initAutoDoot(enabled) {
-    autoDootenabled = enabled;
-    if (enabled) {
-        pageElements.autoDootButton.innerText = 'Stop';
-        pageElements.autoDootTitle.classList.add('started');
-    }
-}
-
-function initNotifier(enabled) {
-    notifierEnabled = enabled;
-    if (enabled) {
-        pageElements.notifierButton.innerText = 'Stop';
-        pageElements.notifierTitle.classList.add('started');
-    }
-}
-
-function initHandlers() {
-    pageElements.upvote.onclick = function () {
-        if (!this.classList.contains('inactive') && !this.classList.contains('active')) {
-            this.classList.add('active');
-            pageElements.downvote.classList.add('inactive');
-            sendMessage('vote_changed', {voteState: 'upvoted'})
-        }
-    };
-
-    pageElements.downvote.onclick = function () {
-        if (!this.classList.contains('inactive') && !this.classList.contains('active')) {
-            this.classList.add('active');
-            pageElements.upvote.classList.add('inactive');
-            sendMessage('vote_changed', {voteState: 'upvoted'});
-        }
-    };
-
-    pageElements.autoDootButton.onclick = function () {
-        autoDootEnabled = !autoDootEnabled;
-        chrome.storage.sync.set({'autoDootEnabled': autoDootEnabled});
-
-        sendMessage('auto_doot_toggled', {enabled: autoDootEnabled});
-
-        if (autoDootEnabled) {
-            pageElements.autoDootButton.innerText = 'Stop'
-            pageElements.autoDootTitle.classList.add('started');
-        } else {
-            pageElements.autoDootButton.innerText = 'Start';
-            pageElements.autoDootTitle.classList.remove('started');
-        }
-    };
-
-    pageElements.notifierButton.onclick = function () {
-        notifierEnabled = !notifierEnabled;
-        chrome.storage.sync.set({'notifierEnabled': notifierEnabled});
-
-        sendMessage('notifier_toggled', {enabled: notifierEnabled});
-
-        if (notifierEnabled) {
-            pageElements.notifierButton.innerText = 'Stop'
-            pageElements.notifierTitle.classList.add('started');
-        } else {
-            pageElements.notifierButton.innerText = 'Start';
-            pageElements.notifierTitle.classList.remove('started');
-        }
-    };
-}
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     switch (request.event) {
@@ -107,10 +64,104 @@ function findElements() {
         progressBar: document.getElementById('progress-bar'),
         progressFill: document.getElementById('progress-fill'),
         autoDootTitle: document.getElementById('auto-doot-title'),
-        autoDootButton: document.getElementById('auto-doot-button'),
+        autoDootCheckbox: document.getElementById('auto-doot-checkbox'),
         notifierTitle: document.getElementById('notifier-title'),
-        notifierButton: document.getElementById('notifier-button')
+        notifierCheckbox: document.getElementById('notifier-checkbox'),
+        notifierShowAllCheckbox: document.getElementById('notifier-show-all'),
+        notifierShowAlertsCheckbox: document.getElementById('notifier-show-alerts'),
+        notifierSettings: document.getElementById('notifier-settings'),
+        notifierOptions: document.getElementById('notifier-options'),
+        optionsContainer: document.getElementById('options-container')
     };
+}
+
+function initHandlers() {
+    pageElements.upvote.onclick = function () {
+        if (!this.classList.contains('inactive') && !this.classList.contains('active')) {
+            this.classList.add('active');
+            pageElements.downvote.classList.add('inactive');
+            sendMessage('vote_changed', {voteState: 'upvoted'})
+        }
+    };
+
+    pageElements.downvote.onclick = function () {
+        if (!this.classList.contains('inactive') && !this.classList.contains('active')) {
+            this.classList.add('active');
+            pageElements.upvote.classList.add('inactive');
+            sendMessage('vote_changed', {voteState: 'upvoted'});
+        }
+    };
+
+    pageElements.autoDootCheckbox.onclick = function () {
+        this.checked = !this.checked;
+        
+        var self = this;
+        chrome.storage.sync.set({'autoDootEnabled': !autoDootEnabled}, function () {
+            autoDootEnabled = !autoDootEnabled;
+            animator.toggleClass(pageElements.autoDootTitle, 'started', autoDootEnabled);
+            self.checked = !self.checked;
+            sendMessage('auto_doot_toggled', {enabled: autoDootEnabled});
+        });
+    };
+
+    pageElements.notifierCheckbox.onclick = function () {
+        this.checked = !this.checked;
+
+        var self = this;
+        chrome.storage.sync.set({'notifierEnabled': !notifierEnabled}, function () {
+            notifierEnabled = !notifierEnabled;
+            animator.toggleClass(pageElements.notifierTitle, 'started', notifierEnabled);
+            self.checked = !self.checked;
+            sendMessage('notifier_toggled', {enabled: notifierEnabled});
+        });
+    };
+
+    pageElements.notifierShowAllCheckbox.onclick = function () {
+        var newValue = this.checked;
+        this.checked = !this.checked;
+        
+        var self = this;
+        chrome.storage.sync.set({'notifierShowAll': newValue}, function () {
+            self.checked = !self.checked;
+        });
+    };
+
+    pageElements.notifierShowAlertsCheckbox.onclick = function () {
+        var newValue = this.checked;
+        this.checked = !this.checked;
+        
+        var self = this;
+        chrome.storage.sync.set({'notifierShowAlerts': newValue}, function () {
+            self.checked = !self.checked;
+        });
+    };
+
+    pageElements.notifierSettings.onclick = toggleNotifierOptions;
+}
+
+function toggleNotifierOptions() {
+    if (!chrome.extension.getBackgroundPage().notifierOptionsVisible) {
+        animator.slideDown(pageElements.optionsContainer, function () {
+            animator.fadeIn(pageElements.notifierOptions, null, 400);
+        });
+    } else {
+        animator.fadeOut(pageElements.notifierOptions, function () {
+            animator.slideUp(pageElements.optionsContainer, null, 150);
+        }, 200);
+    }
+
+    chrome.extension.getBackgroundPage().notifierOptionsVisible = !chrome.extension.getBackgroundPage().notifierOptionsVisible;
+}
+
+function sendMessage(event, data, callback) {
+    chrome.tabs.query({url: '*://app.jqbx.fm/*', currentWindow: true}, function (tabs) {
+        if (tabs.length > 0) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                event: event,
+                data: data
+            }, callback);
+        }
+    });
 }
 
 function resetProgressBar(elapsed, duration) {
@@ -136,28 +187,17 @@ function resetProgressBar(elapsed, duration) {
     }, 1000);
 }
 
-function sendMessage(event, data, callback) {
-    chrome.tabs.query({url: '*://app.jqbx.fm/*', currentWindow: true}, function (tabs) {
-        if (tabs.length > 0) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-                event: event,
-                data: data
-            }, callback);
-        }
-    });
-}
-
 function updateSong(songData) {
     if (songData && songData.song && songData.dj) {
-        fader.fadeOut(pageElements.songContainer, function () {
+        animator.fadeOut(pageElements.songContainer, function () {
             pageElements.songTitle.innerText = songData.song.title;
             pageElements.artists.innerText = songData.song.artists.join(', ');
             pageElements.dj.innerText = songData.dj.jqbxName;
             resetProgressBar(songData.song.elapsedTime, songData.song.duration);
-            fader.fadeIn(pageElements.songContainer);
+            animator.fadeIn(pageElements.songContainer);
         });
     } else {
-        fader.fadeOut(pageElements.songContainer);
+        animator.fadeOut(pageElements.songContainer);
     }
 }
 

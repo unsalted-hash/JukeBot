@@ -13,25 +13,21 @@ function Notifier(jukeBot) {
         }
     });
 
-    function parseMessages() {
+    function sendMessages() {
         var newMessages = jukeBot.latestMessages;
-        var keyPhrase = '<span class="mention">' + jukeBot.currentUser + '</span>';
         for (var i = 0; i < newMessages.length; i++) {
-            var message = newMessages[i];
-            if (message.html.indexOf(keyPhrase) > -1) {
-                chrome.runtime.sendMessage({
-                    event: 'user_mentioned',
-                    data: {
-                        message: message
-                    }
-                });
-            }
+            chrome.runtime.sendMessage({
+                event: 'message_received',
+                data: {
+                    message: newMessages[i]
+                }
+            });
         }
     }
 
     this.start = function () {
         if (!running) {
-            jukeBot.addHandler(handlerId, jukeBot.events.messageReceived, parseMessages);
+            jukeBot.addHandler(handlerId, jukeBot.events.messageReceived, sendMessages);
             running = true;
         }
     };

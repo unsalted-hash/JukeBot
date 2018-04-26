@@ -4,7 +4,7 @@
     <title>JukeBot</title>
     <link href="./styles.css" rel="stylesheet" type="text/css">
     <script src="./scripts/popup/popup.js" type="text/javascript"></script>
-    <script src="./scripts/popup/Fader.js" type="text/javascript"></script>
+    <script src="./scripts/popup/Animator.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="header">
@@ -45,8 +45,9 @@
           Main script for JukeBot. Allows you to do things like view the song that is currently playing or give a quick thumbs-up.
         </td>
         <td>
-          <button disabled>Stop</button>
+          
         </td>
+        <td></td>
       </tr>
       <tr>
         <td>
@@ -56,21 +57,51 @@
           Spread the love! Automatically give a thumbs-up for every song.
         </td>
         <td>
-          <button id="auto-doot-button">Start</button>
+          <label class="switch">
+            <input id="auto-doot-checkbox" type="checkbox">
+            <span class="slider"></span>
+          </label>
         </td>
+        <td></td>
       </tr>
       <tr>
         <td>
           <span id="notifier-title" class="script-title">Notifier</span>
         </td>
         <td>
-          Get a notification whenever your name is mentioned in the JQBX chat.
+          Get a notification whenever you're mentioned in the JQBX chat.
         </td>
         <td>
-          <button id="notifier-button">Start</button>
+          <label class="switch">
+            <input id="notifier-checkbox" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td>
+          <img id="notifier-settings" src="./icons/cog16.png" class="settings-icon" draggable="false" />
         </td>
       </tr>
     </table>
+
+    <div id="options-container" class="options-container">
+      <div id="notifier-options" class="options">
+        <h3>Notifier Options</h3>
+        <div>
+          <label class="switch-text">Notify me about all new messages</label>
+          <label class="switch">
+            <input id="notifier-show-all" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div>
+          <label class="switch-text">Notify me about room alerts</label>
+          <label class="switch">
+            <input id="notifier-show-alerts" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
 
     <div id="created-by">
       <i>Created by Hawk</i>

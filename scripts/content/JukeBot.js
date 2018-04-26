@@ -27,6 +27,23 @@ function JukeBot() {
 		userChanged: 'userChanged'
 	};
 
+	function checkCurrentUser() {
+		var currentUser = getCurrentUsername();
+		if (self.currentUser) {
+			if (currentUser && self.currentUser != currentUser) {
+				self.currentUser = currentUser;
+				return true;
+			}
+		} else {
+			if (currentUser) {
+				self.currentUser = currentUser;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	function checkNewMessages() {
 		var newMessages = getMessages();
 		if (lastKnownMessage) {
@@ -55,12 +72,27 @@ function JukeBot() {
 		return false;
 	}
 
-	function compareMessage(message1, message2) {
-		return message1.author == message2.author && message1.text == message2.text;
+	function checkRoomName() {
+		var roomName = getRoomName();
+
+		if (self.roomName) {
+			if (roomName && self.roomName != roomName) {
+				self.roomName = roomName;
+				return true;
+			}
+		} else {
+			if (roomName) {
+				self.roomName = roomName;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function checkDjChanged() {
 		var dj = getCurrentDj();
+
 		if (self.currentDj) {
 			if (dj && self.currentDj.spotifyName != dj.spotifyName) {
 				self.currentDj = dj;
@@ -90,7 +122,7 @@ function JukeBot() {
 					delayTicks++;
 				}
 
-				if (newSong || delayTicks == 8) {
+				if (newSong || delayTicks == 4) {
 					songChanged = true;
 				}
 
@@ -116,30 +148,13 @@ function JukeBot() {
 		if (self.currentSong) {
 			var elapsedTime = getElapsedTime();
 			self.currentSong.elapsedTime = elapsedTime != null ? elapsedTime : 0;
-			if (song && self.currentSong.title != song.title && self.currentSong.artists.join() != song.artists.join()) {
+			if (song && (self.currentSong.title != song.title || self.currentSong.artists.join() != song.artists.join())) {
 				self.currentSong = song;
 				return true;
 			}
 		} else {
 			if (song) {
 				self.currentSong = song;
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	function checkCurrentUser() {
-		var currentUser = getCurrentUsername();
-		if (self.currentUser) {
-			if (currentUser && self.currentUser != currentUser) {
-				self.currentUser = currentUser;
-				return true;
-			}
-		} else {
-			if (currentUser) {
-				self.currentUser = currentUser;
 				return true;
 			}
 		}
@@ -162,6 +177,10 @@ function JukeBot() {
 		}
 
 		return false;
+	}
+
+	function compareMessage(message1, message2) {
+		return message1.author == message2.author && message1.text == message2.text;
 	}
 	
 	function executeHandlers(handlers) {
@@ -237,26 +256,44 @@ function JukeBot() {
 		var messages = [];
 
 		var currentAuthor = null;
-		var messageElements = document.querySelectorAll('.chat li.message:not(.alert)');
+		var messageElements = document.querySelectorAll('.chat li.message');
 		var length = messageElements.length < 15 ? messageElements.length : 15;
 		for (var i = messageElements.length - length; i < messageElements.length; i++) {
 			var messageElement = messageElements[i];
 
-			var authorElement = messageElement.querySelector('span.name > span');
-			if (authorElement) {
-				currentAuthor = messageElement.querySelector('span.name > span').innerText;
-			}
+
+			var isAlert = messageElement.classList.contains('alert');
 
 			var contentElement = messageElement.querySelector('p.content');
 
-			messages.push({
-				author: currentAuthor,
+			var message = {
+				isAlert: isAlert,
 				text: contentElement.innerText,
 				html: contentElement.innerHTML
-			});
+			}
+
+			if (!isAlert) {
+				var authorElement = messageElement.querySelector('span.name > span');
+				if (authorElement) {
+					currentAuthor = messageElement.querySelector('span.name > span').innerText;
+					message.author = currentAuthor;
+				}
+			}
+
+			messages.push(message);
 		}
 
 		return messages;
+	}
+
+	function getRoomName() {
+		var titleElement = document.querySelector('.header .title > span');
+
+		if (!titleElement) {
+			return null;
+		}
+
+		return titleElement.innerText;
 	}
 
 	function getVoteState() {
