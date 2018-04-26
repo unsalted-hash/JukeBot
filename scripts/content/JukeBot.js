@@ -3,8 +3,6 @@ function JukeBot() {
 	var updateInterval;
 	var handlers = [];
 
-	var lastKnownMessage;
-
 	var djChanged = false;
 	var songChanged = false;
 	var delayActive = false;
@@ -46,27 +44,27 @@ function JukeBot() {
 
 	function checkNewMessages() {
 		var newMessages = getMessages();
-		if (lastKnownMessage) {
+		if (self.lastKnownMessage) {
 			if (newMessages && newMessages.length) {
 				var latestMessage = newMessages[newMessages.length - 1];
 
-				if (!compareMessage(lastKnownMessage, latestMessage)) {
+				if (!compareMessage(self.lastKnownMessage, latestMessage)) {
 					self.latestMessages = [latestMessage];
 					for (var i = newMessages.length - 2; i >= 0; i--) {
-						if (!compareMessage(lastKnownMessage, newMessages[i])) {
+						if (!compareMessage(self.lastKnownMessage, newMessages[i])) {
 							self.latestMessages.push(newMessages[i]);
 						} else {
 							break;
 						}
 					}
 
-					lastKnownMessage = newMessages[newMessages.length - 1];
+					self.lastKnownMessage = newMessages[newMessages.length - 1];
 					return true;
 				}
 			}
 		} else {
 			if (newMessages && newMessages.length) {
-				lastKnownMessage = newMessages[newMessages.length - 1];
+				self.lastKnownMessage = newMessages[newMessages.length - 1];
 			}
 		}
 		return false;
@@ -257,7 +255,7 @@ function JukeBot() {
 
 		var currentAuthor = null;
 		var messageElements = document.querySelectorAll('.chat li.message');
-		var length = messageElements.length < 15 ? messageElements.length : 15;
+		var length = messageElements.length < 30 ? messageElements.length : 30;
 		for (var i = messageElements.length - length; i < messageElements.length; i++) {
 			var messageElement = messageElements[i];
 
@@ -275,9 +273,9 @@ function JukeBot() {
 			if (!isAlert) {
 				var authorElement = messageElement.querySelector('span.name > span');
 				if (authorElement) {
-					currentAuthor = messageElement.querySelector('span.name > span').innerText;
-					message.author = currentAuthor;
+					currentAuthor = authorElement.innerText;
 				}
+				message.author = currentAuthor;
 			}
 
 			messages.push(message);

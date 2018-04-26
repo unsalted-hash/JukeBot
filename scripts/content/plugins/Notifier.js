@@ -16,12 +16,15 @@ function Notifier(jukeBot) {
     function sendMessages() {
         var newMessages = jukeBot.latestMessages;
         for (var i = 0; i < newMessages.length; i++) {
-            chrome.runtime.sendMessage({
-                event: 'message_received',
-                data: {
-                    message: newMessages[i]
-                }
-            });
+            var message = newMessages[i];
+            if (message.isAlert || message.author != jukeBot.currentUser) {
+                chrome.runtime.sendMessage({
+                    event: 'message_received',
+                    data: {
+                        message: newMessages[i]
+                    }
+                });
+            }
         }
     }
 
