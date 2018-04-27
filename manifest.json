@@ -3,7 +3,7 @@
     "name": "JukeBot - The #1 JQBX helper!",
     "short_name": "JukeBot",
     "description": "Provides a variety of utilities for JQBX.fm.",
-    "version": "0.3",
+    "version": "0.4",
     "permissions": [
         "storage",
         "notifications",

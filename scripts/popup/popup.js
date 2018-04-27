@@ -11,8 +11,8 @@ window.onload = function () {
     initHandlers();
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
-        autoDootenabled = response.autoDootEnabled;
-        pageElements.autoDootCheckbox.checked = autoDootenabled;
+        autoDootEnabled = response.autoDootEnabled;
+        pageElements.autoDootCheckbox.checked = autoDootEnabled;
         animator.toggleClass(pageElements.autoDootTitle, 'started', autoDootEnabled);
     });
 
