@@ -199,7 +199,7 @@ function JukeBot() {
 		var split = djElement.href.split(':');
 		var spotifyName = split[split.length - 1];
 		
-		var jqbxName = djElement.children[1].innerHTML;
+		var jqbxName = djElement.children[0].children[1].innerHTML;
 		
 		return {
 			spotifyName: spotifyName,
