@@ -1,4 +1,5 @@
 var notifierOptionsVisible = false;
+var starred = false;
 
 var defaultValues = [
     { key: 'autoDootEnabled', value: false },
@@ -35,3 +36,58 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
 });
+
+function sendMessage(event, data, callback) {
+    chrome.tabs.query({url: '*://app.jqbx.fm/*', currentWindow: true}, function (tabs) {
+        if (tabs.length > 0) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                event: event,
+                data: data
+            }, callback);
+        }
+    });
+}
+
+chrome.commands.onCommand.addListener(function(command) {
+    switch (command) {
+        case "dope": sendDope(); break;
+        case "stepupdown": sendStepUpDown(); break;
+        case "star": sendStar(); break;
+        case "syncaudio": sendSyncAudio(); break;
+    }
+
+  });
+
+function sendDope() {
+    createNotification('You upvoted the current track!',"JQBX Notification");    
+    sendMessage('upvote-shortcut', {});
+    return;
+}
+
+function sendStepUpDown() {
+    createNotification("Toggled DJ'ing!","JQBX Notification");    
+    sendMessage('stepupdown-shortcut', {});
+    return;
+}
+
+function sendStar() {
+    createNotification('You toggled the star on the current track!',"JQBX Notification");
+    sendMessage('star-shortcut', {});
+    return;
+}
+
+function sendSyncAudio() {
+    createNotification('Audio synced!',"JQBX Notification");    
+    sendMessage('syncaudio-shortcut', {});
+    return;
+}
+
+function createNotification(message, title) {
+    var notificationObject = {
+        type: 'basic',
+        iconUrl: './icons/icon48.png',
+        message: message,
+        title: title
+    };
+    chrome.notifications.create('jukebot_notif', notificationObject);
+}

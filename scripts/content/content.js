@@ -4,6 +4,7 @@ window.onload = function () {
     var voteWatcher = new VoteWatcher(jukeBot);
     var autoDoot = new AutoDoot(jukeBot);
     var notifier = new Notifier(jukeBot);
+    var shortcutHandler = new ShortcutHandler(jukeBot);
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
         if (response.autoDootEnabled != null) {
