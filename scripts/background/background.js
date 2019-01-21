@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                         message: request.data.message.text,
                         title: isAlert ? "(Alert)" : request.data.message.author
                     };
-                    chrome.notifications.create('jukebot_notif', notificationObject);
+                    createNotification(request.data.message.text, (isAlert ? "(Alert)" : request.data.message.author));
                 }
             }
         });
