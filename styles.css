@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&family=Major+Mono+Display&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Kumbh+Sans:wght@400;700&display=swap");
 
 :root {
   --primary: #0f3460;
@@ -8,7 +8,7 @@
   --success: #46e864;
   --player-gradient: linear-gradient(to right, #009fff, #ec2f4b);
   --font-sans: "Kumbh Sans", sans-serif;
-  --font-mono: "Major Mono Display", monospace;
+  --font-title: "Audiowide", cursive;
 }
 
 body {
@@ -25,7 +25,7 @@ h2,
 h3 {
   margin: 4px 0 6px 2px;
   color: #fff;
-  font-family: var(--font-mono);
+  font-family: var(--font-title);
 }
 
 button {
@@ -68,6 +68,7 @@ button:disabled {
   text-align: center;
   visibility: hidden;
   width: 90%;
+  color: rgba(225, 225, 225, 0.8);
 }
 
 #song-display td:first-child,
@@ -77,6 +78,11 @@ button:disabled {
 
 #played-by {
   font-size: 10px;
+}
+
+#song-title {
+  color: #fff;
+  font-weight: bold;
 }
 
 .progress-bar {
@@ -186,7 +192,7 @@ table.script-list td:first-child {
   width: 58px;
   font-weight: 900;
   color: #fff;
-  font-family: var(--font-mono);
+  font-family: var(--font-title);
 }
 
 table.script-list td:last-child {
