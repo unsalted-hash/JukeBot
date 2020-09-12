@@ -6,6 +6,7 @@
   --light: #efefef;
   --danger: #e94560;
   --success: #46e864;
+  --player-gradient: linear-gradient(to right, #009fff, #ec2f4b);
   --font-sans: "Kumbh Sans", sans-serif;
   --font-mono: "Major Mono Display", monospace;
 }
@@ -81,25 +82,45 @@ button:disabled {
 .progress-bar {
   border-radius: 2px;
   margin: 4px 5% 0;
-  border: 1px solid #aaa;
   width: 90%;
+  background: rgba(225, 225, 225, 0.3);
+  border-radius: 5px;
 }
 
 .progress-bar .progress-fill {
-  background-color: #337ab7;
-  height: 2px;
+  background: var(--player-gradient);
+  height: 4px;
   width: 50%;
+  border-radius: 5px;
 }
 
 .thumb {
   border-radius: 6px;
-  border: 1px solid #bbb;
   cursor: pointer;
   height: 32px;
   margin: 0;
   padding: 8px 4px 0;
   user-select: none;
   width: 32px;
+  box-shadow: 5px 5px 8px #0a0a12, -5px -5px 8px #2a2a4a;
+  position: relative;
+}
+
+.thumb-icon-active,
+.thumb-icon-inactive {
+  transition: 0.3s ease-in-out;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.thumb-icon-active {
+  opacity: 0;
+}
+
+.thumb-icon-inactive {
+  opacity: 1;
 }
 
 .thumb.active {
@@ -107,17 +128,25 @@ button:disabled {
   cursor: default;
 }
 
+.thumb.active .thumb.inactive {
+  opacity: 0;
+}
+
+.thumb.active .thumb-icon-active {
+  opacity: 1;
+}
+
 .thumb.inactive {
   cursor: default;
+  opacity: 0.3;
 }
 
-.thumb.upvote.active {
-  background-color: #5cb85c;
-  border-color: #4cae4c;
+.thumb:not(.active):not(.inactive):hover .thumb-icon-active {
+  opacity: 0.8;
 }
 
-.thumb.upvote:not(.active):not(.inactive):hover {
-  background-color: #dff0d8;
+.thumb:not(.active):not(.inactive):hover .thumb-icon-inactive {
+  opacity: 0;
 }
 
 .thumb.downvote.active {
@@ -125,8 +154,8 @@ button:disabled {
   border-color: #d43f3a;
 }
 
-.thumb.downvote:not(.active):not(.inactive):hover {
-  background-color: #fbd7d7;
+.thumb.upvote.active {
+  color: var(--success);
 }
 
 .script-title.started {
