@@ -12,11 +12,17 @@ function AutoDoot(jukeBot) {
     });
 
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        if (request.event == 'auto_doot_toggled' || request.event == 'auto_doot_type_changed') {
+        if (request.event == 'auto_doot_toggled') {
             if (request.data.enabled) {
                 self.start(request.data.type);
             } else {
                 self.stop();
+            }
+        }
+        else if (request.event == 'auto_doot_type_changed') {
+            if (request.data.enabled) {
+                self.stop();
+                self.start(request.data.type);
             }
         }
     });
@@ -45,7 +51,7 @@ function AutoDoot(jukeBot) {
                 jukeBot.downvote();
                 jukeBot.addHandler(handlerId, jukeBot.events.songChanged, function () {
                     setTimeout(function() {
-                        jukeBot.upvote();
+                        jukeBot.downvote();
                     }, 2500);
                 });
             }
