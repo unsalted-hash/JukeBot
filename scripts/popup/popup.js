@@ -3,12 +3,21 @@ var progressInterval;
 var animator;
 
 var autoDootEnabled;
+var autoDootType = "upvote";
 var notifierEnabled;
 
 window.onload = function () {
     animator = new Animator();
     pageElements = findElements();
     initHandlers();
+
+    chrome.storage.sync.get('autoDootType', function (response) {
+        autoDootType = response.autoDootType;
+        var els = document.querySelector(`select[name="voteType"] option[value="${autoDootType}"]`);
+        if(els){
+            els.selected = true;
+        }
+    });
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
         autoDootEnabled = response.autoDootEnabled;
@@ -65,6 +74,7 @@ function findElements() {
         progressFill: document.getElementById('progress-fill'),
         autoDootTitle: document.getElementById('auto-doot-title'),
         autoDootCheckbox: document.getElementById('auto-doot-checkbox'),
+        autoDootType: document.getElementById('voteType'),
         notifierTitle: document.getElementById('notifier-title'),
         notifierCheckbox: document.getElementById('notifier-checkbox'),
         notifierShowAllCheckbox: document.getElementById('notifier-show-all'),
@@ -100,7 +110,14 @@ function initHandlers() {
             autoDootEnabled = !autoDootEnabled;
             animator.toggleClass(pageElements.autoDootTitle, 'started', autoDootEnabled);
             self.checked = !self.checked;
-            sendMessage('auto_doot_toggled', {enabled: autoDootEnabled});
+            sendMessage('auto_doot_toggled', {enabled: autoDootEnabled, type: autoDootType});
+        });
+    };
+
+    pageElements.autoDootType.onchange = function () {
+        chrome.storage.sync.set({'autoDootType': pageElements.autoDootType.value}, function () {
+            autoDootType = pageElements.autoDootType.value;
+            sendMessage('auto_doot_type_changed', {enabled: autoDootEnabled, type: autoDootType});
         });
     };
 

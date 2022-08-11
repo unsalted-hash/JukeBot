@@ -4,29 +4,52 @@ function AutoDoot(jukeBot) {
     var self = this;
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
-        if (response.autoDootEnabled != null && response.autoDootEnabled == true) {
-            self.start();
-        }
+        chrome.storage.sync.get('autoDootType', function (typeResponse) {
+            if (response.autoDootEnabled != null && response.autoDootEnabled == true) {
+                self.start(typeResponse.autoDootType);
+            }
+        });
     });
 
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        if (request.event == 'auto_doot_toggled') {
+        if (request.event == 'auto_doot_toggled' || request.event == 'auto_doot_type_changed') {
             if (request.data.enabled) {
-                self.start();
+                self.start(request.data.type);
             } else {
                 self.stop();
             }
         }
     });
 
-    this.start = function () {
-        if (!running) {
-            jukeBot.upvote();
-            jukeBot.addHandler(handlerId, jukeBot.events.songChanged, function () {
-                setTimeout(function() {
-                    jukeBot.upvote();
-                }, 2500);
-            });
+    this.start = function (type) {
+        if (!running && type) {
+            if (type == "upvote") {
+                jukeBot.upvote();
+                jukeBot.addHandler(handlerId, jukeBot.events.songChanged, function () {
+                    setTimeout(function() {
+                        jukeBot.upvote();
+                    }, 2500);
+                });
+            }
+            else if (type == "boofstar") {
+                jukeBot.downvote();
+                jukeBot.star();
+                jukeBot.addHandler(handlerId, jukeBot.events.songChanged, function () {
+                    setTimeout(function() {
+                        jukeBot.downvote();
+                        jukeBot.star();
+                    }, 2500);
+                });
+            }
+            else if (type == "downvote") {
+                jukeBot.downvote();
+                jukeBot.addHandler(handlerId, jukeBot.events.songChanged, function () {
+                    setTimeout(function() {
+                        jukeBot.upvote();
+                    }, 2500);
+                });
+            }
+
             running = true;
         }
     };

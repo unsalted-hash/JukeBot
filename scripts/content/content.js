@@ -13,6 +13,14 @@ window.onload = function () {
             }
         }
     });
+
+    chrome.storage.sync.get('autoDootType', function (response) {
+        if (response.autoDootType != null) {
+            if (response.autoDootEnabled) {
+                autoDoot.start();
+            }
+        }
+    });
     
     chrome.storage.sync.get('notifierEnabled', function (response) {
         if (response.notifierEnabled != null) {
