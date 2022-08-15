@@ -4,9 +4,18 @@ window.onload = function () {
     var voteWatcher = new VoteWatcher(jukeBot);
     var autoDoot = new AutoDoot(jukeBot);
     var notifier = new Notifier(jukeBot);
+    var shortcutHandler = new ShortcutHandler(jukeBot);
 
     chrome.storage.sync.get('autoDootEnabled', function (response) {
         if (response.autoDootEnabled != null) {
+            if (response.autoDootEnabled) {
+                autoDoot.start();
+            }
+        }
+    });
+
+    chrome.storage.sync.get('autoDootType', function (response) {
+        if (response.autoDootType != null) {
             if (response.autoDootEnabled) {
                 autoDoot.start();
             }

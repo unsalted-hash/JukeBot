@@ -285,7 +285,7 @@ function JukeBot() {
 	}
 
 	function getRoomName() {
-		var titleElement = document.querySelector('.header .title > span');
+		var titleElement = document.querySelector('.header .title a');
 
 		if (!titleElement) {
 			return null;
@@ -347,6 +347,25 @@ function JukeBot() {
 	this.downvote = function () {
 		sendVote(false);
 	};
+
+	this.stepUpDown = function() {
+		var stepDownElement = document.querySelector('button.step-down');
+		var stepUpElement = document.querySelector('button.step-up');
+		stepDownElement ? stepDownElement.click() : (stepUpElement ? stepUpElement.click() : null);
+	};
+
+	this.syncAudio = function() {
+		var syncAudioElement = document.querySelector('button.sync');
+		var resumeAudioElement = document.querySelector('button.resume');
+		syncAudioElement ? syncAudioElement.click() : (resumeAudioElement ? resumeAudioElement.click() : null);
+	}
+
+	this.star = function() {
+		var starElement = document.querySelector('button.star');
+		if (starElement) {
+			starElement.click();
+		}
+	}
 	
 	this.addHandler = function (id, eventType, callback) {
 		if (!this.events[eventType]) {
@@ -385,6 +404,8 @@ function JukeBot() {
 
 		return false;
 	};
+
+
 	
 	this.start = function () {
 		updateInterval = setInterval(function () {
@@ -409,4 +430,5 @@ function JukeBot() {
 	this.stop = function () {
 		clearInterval(updateInterval);
 	};
+
 };

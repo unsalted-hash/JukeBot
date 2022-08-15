@@ -39,20 +39,15 @@
     <table class="script-list">
       <tr>
         <td>
-          <span class="script-title started">JukeBot</span>
+          <span id="auto-doot-title" class="script-title">Auto Vote</span>
         </td>
         <td>
-          Main script for JukeBot. Allows you to do things like view the song that is currently playing or give a quick thumbs-up.
-        </td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <span id="auto-doot-title" class="script-title">AutoDope</span>
-        </td>
-        <td>
-          Spread the love! Automatically give a thumbs-up for every song.
+          <label for="voteType">Automatically vote for every song: </label>
+          <select name="voteType" id="voteType">
+            <option value="upvote">Upvote</option>
+            <option value="boofstar">Boofstar</option>
+            <option value="downvote">Downvote :(</option>
+          </select>
         </td>
         <td></td>
         <td>
@@ -102,7 +97,7 @@
     </div>
 
     <div id="created-by">
-      <i>Created by Hawk</i>
+      <i>Created by Hawk, patched by Darin</i>
     </div>
   </body>
 </html>

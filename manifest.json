@@ -36,8 +36,40 @@
                 "./scripts/content/plugins/SongWatcher.js",
                 "./scripts/content/plugins/VoteWatcher.js",
                 "./scripts/content/plugins/AutoDoot.js",
-                "./scripts/content/plugins/Notifier.js"
+                "./scripts/content/plugins/Notifier.js",
+                "./scripts/content/plugins/ShortcutHandler.js"
+                
             ]
         }
-    ]
+    ],
+    "commands": {
+          "dope": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+Y",
+              "mac": "Command+Shift+Y"
+            },
+            "description": "Dope"
+          },
+          "stepupdown": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+U",
+              "mac": "Command+Shift+U"
+            },
+            "description": "Toggle DJ Status"
+          },
+          "star": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+H",
+              "mac": "Command+Shift+H"
+            },
+            "description": "Star"
+          },
+          "syncaudio": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+K",
+              "mac": "Command+Shift+K"
+            },
+            "description": "Sync Audio"
+          }
+        }
 }
